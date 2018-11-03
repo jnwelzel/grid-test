@@ -1,0 +1,18 @@
+@import "../colors";
+
+.component {
+  color: $dove-gray;
+  display: table;
+  font-weight: 600;
+  white-space: nowrap;
+  &:before, &:after {
+    border-top: 1px solid $silver-chalice;
+    content: '';
+    display: table-cell;
+    position: relative;
+    top: 0.5em;
+    width: 45%;
+  }
+  &:before { right: 1.5%; }
+  &:after { left: 1.5%; }
+}

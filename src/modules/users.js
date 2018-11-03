@@ -1,6 +1,6 @@
-import Immutable from 'immutable';
+import { Map, List } from 'immutable';
 
-const initialState = { users: Immutable.List([]) };
+const initialState = Map({ usersRepo: List([]) });
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {

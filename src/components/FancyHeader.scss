@@ -3,7 +3,6 @@
 .component {
   color: $dove-gray;
   display: table;
-  font-weight: 600;
   white-space: nowrap;
   &:before, &:after {
     border-top: 1px solid $silver-chalice;

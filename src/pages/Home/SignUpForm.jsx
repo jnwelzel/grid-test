@@ -4,7 +4,7 @@ import InputGroup from '../../components/InputGroup';
 import styles from './SignUpForm.scss';
 
 const SignUpForm = () => (
-  <form className={styles.layout}>
+  <form className={styles.form}>
     <InputGroup>
       <label htmlFor="userName">User Name</label>
       <input type="text" name="userName" id="userName" placeholder="john.doe" />

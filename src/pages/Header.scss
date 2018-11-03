@@ -1,0 +1,27 @@
+@import "../../colors";
+
+.main {
+  background-color: $blaze-orange;
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  height: 60px;
+  line-height: 60px;
+  text-transform: uppercase;
+  
+  .navLink {
+    align-items: center;
+    display: flex;
+    padding: 0 20px;
+    color: $white;
+    text-decoration: none;
+    
+    &:hover {
+      background-color: lighten($blaze-orange, 10%);
+    }
+
+    &.active {
+      color: $turquoise-blue;
+    }
+  }
+}

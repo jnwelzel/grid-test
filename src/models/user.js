@@ -13,23 +13,7 @@ const user = {
 };
 
 const factoryUser = (userName, postTitle, views, likes) => (
-  Object.create(user, {
-    userName: {
-      value: userName,
-    },
-    postTitle: {
-      value: postTitle,
-    },
-    views: {
-      value: views,
-    },
-    likes: {
-      value: likes,
-    },
-    createdAt: {
-      value: new Date(),
-    },
-  })
+  Object.assign(user, { userName, postTitle, views, likes, createdAt: new Date() })
 );
 
 export default factoryUser;

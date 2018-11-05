@@ -1,19 +1,19 @@
-import { fromJS } from 'immutable';
+import { Map, List } from 'immutable';
 
 import factoryValidationError from './models/validationError';
 
-export const addUser = (state, user) => (
-  state.update('users', users => users.push(user))
+export const addUser = state => (
+  state.update('usersRepo', users => users.push(state.get('currentUser'))).set('currentUser', Map({}))
 );
 
-export const validateUser = (state, user) => {
+export const validateUser = (state) => {
   const errors = [];
   const {
     userName,
     postTitle,
     views,
     likes,
-  } = user;
+  } = state.get('currentUser').toJS();
 
   if (!userName) {
     errors.push(factoryValidationError('userName', 'User Name is required'));
@@ -32,22 +32,24 @@ export const validateUser = (state, user) => {
     errors.push(factoryValidationError('likes', 'Likes must be a number'));
   }
 
-  return state.set('isFormValid', errors.length === 0).set('errors', fromJS(errors));
+  return state.set('isFormValid', errors.length === 0).set('errors', List(errors));
 };
 
 export const filterUsers = (state, term, field = 'userName') => {
-  const filteredList = state.get('users').filter(user => user[field] === term);
+  const filteredList = state.get('usersRepo').filter(user => user.get(field) === term);
 
   return state.set('filteredUsers', filteredList).set('filterTerm', term).set('filterField', field);
 };
 
 const doSort = (a, b, field, order) => {
-  if (a[field] < b[field]) { return order === 'ASC' ? -1 : 1; }
-  if (a[field] > b[field]) { return order === 'ASC' ? 1 : -1; }
+  if (a.get(field) < b.get(field)) { return order === 'ASC' ? -1 : 1; }
+  if (a.get(field) > b.get(field)) { return order === 'ASC' ? 1 : -1; }
   return 0;
 };
 
-export const sortUsers = (state, field, order) => {
+export const sortUsers = (state) => {
+  const field = state.get('sortField');
+  const order = state.get('sortOrder');
   const sortedUsers = state.get('filteredUsers').sort((a, b) => doSort(a, b, field, order));
-  return state.set('filteredUsers', sortedUsers).set('sortField', field).set('sortOrder', order);
+  return state.set('filteredUsers', sortedUsers);
 };

@@ -11,35 +11,39 @@ import {
 describe('application logic', () => {
   describe('addUser', () => {
     it('adds a user to the state', () => {
-      const firstUser = factoryUser('jnwelzel', 'JS rocks', 1024, 133);
-      const newUser = factoryUser('mpoppins', 'Kids 101', 2048, 266);
-      const currentState = Map({ users: List([firstUser]) });
+      const firstUser = Map(factoryUser('jnwelzel', 'JS rocks', 1024, 133));
+      const newUser = Map(factoryUser('mpoppins', 'Kids 101', 2048, 266));
+      const currentState = Map({ usersRepo: List([firstUser]), currentUser: newUser });
 
       const nextState = addUser(currentState, newUser);
 
-      expect(nextState).toEqual(Map({ users: List([firstUser, newUser]) }));
-      expect(nextState.get('users').size).toBe(2);
-      expect(nextState.get('users').last().userName).toEqual(newUser.userName);
+      expect(nextState).toEqual(
+        Map({ usersRepo: List([firstUser, newUser]), currentUser: Map({}) }),
+      );
+      expect(nextState.get('usersRepo').size).toBe(2);
+      expect(nextState.get('usersRepo').last().userName).toEqual(newUser.userName);
     });
   });
 
   describe('validateUser', () => {
     describe('adds error messages to the state', () => {
       it('when fields are null', () => {
-        const invalidUser = factoryUser(null, null, null, null);
-        const currentState = Map({ isFormValid: true, errors: List() });
+        const invalidUser = Map(factoryUser(null, null, null, null));
+        const currentState = Map(
+          { isFormValid: true, errors: List([]), currentUser: invalidUser },
+        );
 
-        const nextState = validateUser(currentState, invalidUser);
+        const nextState = validateUser(currentState);
 
         expect(nextState.get('isFormValid')).toBeFalsy();
         expect(nextState.get('errors').size).toBe(4);
       });
 
       it('when Likes and Views fields are not numbers', () => {
-        const invalidUser = factoryUser(null, null, '1', '2');
-        const currentState = Map({ isFormValid: true, errors: List() });
+        const invalidUser = Map(factoryUser(null, null, '1', '2'));
+        const currentState = Map({ isFormValid: true, errors: List([]), currentUser: invalidUser });
 
-        const nextState = validateUser(currentState, invalidUser);
+        const nextState = validateUser(currentState);
 
         expect(nextState.get('isFormValid')).toBeFalsy();
         expect(nextState.get('errors').size).toBe(4);
@@ -47,13 +51,13 @@ describe('application logic', () => {
     });
 
     it('sets "isFormValid" to true when data is valid', () => {
-      const user = factoryUser('jnwelzel', 'Title', 100, 20);
-      const currentState = Map({ isFormValid: false, errors: List() });
+      const userObj = factoryUser('ayy', 'post', 1, 122);
+      const user = Map(userObj);
+      const currentState = Map({ isFormValid: false, errors: List([]), currentUser: user });
+      const nextState = validateUser(currentState);
 
-      const nextState = validateUser(currentState, user);
-
-      expect(nextState.get('isFormValid')).toBeTruthy();
       expect(nextState.get('errors').size).toBe(0);
+      expect(nextState.get('isFormValid')).toBeTruthy();
     });
   });
 
@@ -61,13 +65,13 @@ describe('application logic', () => {
     it('adds "filterTerm", "filterField" and "filteredUsers" to the state', () => {
       const term = 'jnwelzel';
       const field = 'userName';
-      const firstUser = factoryUser('jnwelzel', 'My First Blog Post', 0, 0);
-      const secondUser = factoryUser('hspecter', 'Italian Suits Rock', 0, 0);
+      const firstUser = Map(factoryUser('jnwelzel', 'My First Blog Post', 0, 0));
+      const secondUser = Map(factoryUser('hspecter', 'Italian Suits Rock', 0, 0));
       const currentState = Map({
         filteredUsers: List([]),
         filterTerm: '',
         filterField: '',
-        users: List([firstUser, secondUser]),
+        usersRepo: List([firstUser, secondUser]),
       });
 
       const nextState = filterUsers(currentState, term, field);
@@ -75,28 +79,27 @@ describe('application logic', () => {
       expect(nextState.get('filterTerm')).toEqual(term);
       expect(nextState.get('filterField')).toEqual(field);
       expect(nextState.get('filteredUsers').size).toBe(1);
-      expect(nextState.get('filteredUsers').first().userName).toEqual(term);
+      expect(nextState.get('filteredUsers').first().get('userName')).toEqual(term);
     });
   });
 
   describe('sortUsers', () => {
-    it('adds "sortField", "sortOrder" and a sorted "filteredUsers" to the state', () => {
+    it('adds the sorted "filteredUsers" to the state', () => {
       const field = 'postTitle';
-      const order = 'DES';
-      const firstUser = factoryUser('hspecter', 'Italian Suits Rock', 0, 0);
-      const secondUser = factoryUser('jnwelzel', 'My First Blog Post', 0, 0);
+      const order = 'ASC';
+      const firstUser = Map(factoryUser('jnwelzel', 'My First Blog Post', 0, 0));
+      const secondUser = Map(factoryUser('hspecter', 'Italian Suits Rock', 0, 0));
       const currentState = Map({
         filteredUsers: List([firstUser, secondUser]),
-        sortOrder: 'ASC',
-        sortField: 'userName',
-        users: List([firstUser, secondUser]),
+        sortOrder: order,
+        sortField: field,
+        usersRepo: List([firstUser, secondUser]),
       });
 
-      const nextState = sortUsers(currentState, field, order);
+      const nextState = sortUsers(currentState);
 
-      expect(nextState.get('filteredUsers').first().postTitle).toEqual(secondUser.postTitle);
-      expect(nextState.get('sortField')).toEqual(field);
-      expect(nextState.get('sortOrder')).toEqual(order);
+      expect(nextState.get('filteredUsers').first().get('postTitle')).toEqual(secondUser.get('postTitle'));
+      expect(nextState.get('filteredUsers').first().get('userName')).toEqual(secondUser.get('userName'));
     });
   });
 });

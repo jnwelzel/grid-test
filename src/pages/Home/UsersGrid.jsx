@@ -6,10 +6,10 @@ import Section from '../../components/Section';
 import Table from '../../components/Table';
 
 const UsersGrid = () => (
-  <div className={styles.layout}>
+  <div className={styles.container}>
     <UsersFilter />
     <Section label="User Table">
-      <Table 
+      <Table
         headers={[{ fieldName: 'userName', title: 'User name' }, { fieldName: 'postTitle', title: 'Post title' }]}
         rows={[['jnwelzel', 'Ohai'], ['johndoe', 'I don\'t know']]}
       />

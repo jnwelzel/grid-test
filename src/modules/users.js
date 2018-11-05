@@ -1,11 +1,13 @@
 import { Map, List } from 'immutable';
 
-const initialState = Map({ usersRepo: List([]) });
+import { addUser } from '../core';
+
+const initialState = Map({ usersRepo: List([]), currentUser: Map({}) });
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'users.add':
-      return state;
+      return addUser(state);
     default:
       return state;
   }

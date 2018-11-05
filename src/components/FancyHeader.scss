@@ -1,8 +1,10 @@
 @import "../colors";
+@import "../variables";
 
 .component {
   color: $dove-gray;
   display: table;
+  font-family: $fancy-font;
   white-space: nowrap;
   &:before, &:after {
     border-top: 1px solid $silver-chalice;

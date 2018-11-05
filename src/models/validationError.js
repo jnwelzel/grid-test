@@ -4,14 +4,7 @@ const validationError = {
 };
 
 const factoryValidationError = (fieldName, message) => (
-  Object.create(validationError, {
-    fieldName: {
-      value: fieldName,
-    },
-    message: {
-      value: message,
-    },
-  })
+  Object.assign(validationError, { fieldName, message })
 );
 
 export default factoryValidationError;

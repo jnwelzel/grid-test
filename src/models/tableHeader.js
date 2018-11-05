@@ -4,14 +4,7 @@ const tableHeader = {
 };
 
 const factoryTableHeader = (fieldName, title) => (
-  Object.create(tableHeader, {
-    fieldName: {
-      value: fieldName,
-    },
-    title: {
-      value: title,
-    },
-  })
+  Object.assign(tableHeader, { fieldName, title })
 );
 
 export default factoryTableHeader;

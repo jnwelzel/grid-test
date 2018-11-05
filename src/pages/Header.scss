@@ -1,13 +1,13 @@
 @import "../colors";
+@import "../variables";
 
 .main {
   background-color: $blaze-orange;
   display: flex;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: $fancy-font;
+  font-size: 20px;
   height: 60px;
   line-height: 60px;
-  text-transform: uppercase;
   
   .navLink {
     align-items: center;

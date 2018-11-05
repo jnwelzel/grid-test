@@ -40,7 +40,7 @@ export const filterUsers = (state) => {
   const term = state.get('filterTerm');
   const filteredList = state.get('usersRepo').filter(user => user.get(field) === term);
 
-  return state.set('filteredUsers', filteredList).set('filterTerm', term).set('filterField', field);
+  return state.set('filteredUsers', filteredList);
 };
 
 const doSort = (a, b, field, order) => {

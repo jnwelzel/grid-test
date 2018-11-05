@@ -7,7 +7,7 @@ export const addUser = state => (
 );
 
 export const validateUser = (state) => {
-  const errors = [];
+  let errors = List([]);
   const {
     userName,
     postTitle,
@@ -16,26 +16,28 @@ export const validateUser = (state) => {
   } = state.get('currentUser').toJS();
 
   if (!userName) {
-    errors.push(factoryValidationError('userName', 'User Name is required'));
+    errors = errors.push(Map(factoryValidationError('userName', 'User Name is required')));
   }
   if (!postTitle) {
-    errors.push(factoryValidationError('postTitle', 'Post Title is required'));
+    errors = errors.push(Map(factoryValidationError('postTitle', 'Post Title is required')));
   }
   if (!views) {
-    errors.push(factoryValidationError('views', 'Views is required'));
+    errors = errors.push(Map(factoryValidationError('views', 'Views is required')));
   } else if (typeof views !== 'number') {
-    errors.push(factoryValidationError('views', 'Views must be a number'));
+    errors = errors.push(Map(factoryValidationError('views', 'Views must be a number')));
   }
   if (!likes) {
-    errors.push(factoryValidationError('likes', 'Likes is required'));
+    errors = errors.push(Map(factoryValidationError('likes', 'Likes is required')));
   } else if (typeof likes !== 'number') {
-    errors.push(factoryValidationError('likes', 'Likes must be a number'));
+    errors = errors.push(Map(factoryValidationError('likes', 'Likes must be a number')));
   }
 
-  return state.set('isFormValid', errors.length === 0).set('errors', List(errors));
+  return state.set('isFormValid', errors.size === 0).set('errors', errors);
 };
 
-export const filterUsers = (state, term, field = 'userName') => {
+export const filterUsers = (state) => {
+  const field = state.get('filterField');
+  const term = state.get('filterTerm');
   const filteredList = state.get('usersRepo').filter(user => user.get(field) === term);
 
   return state.set('filteredUsers', filteredList).set('filterTerm', term).set('filterField', field);

@@ -46,6 +46,8 @@ describe('application logic', () => {
         const nextState = validateUser(currentState);
 
         expect(nextState.get('isFormValid')).toBeFalsy();
+        expect(nextState.get('errors').get(2).get('message')).toEqual('Views must be a number');
+        expect(nextState.get('errors').last().get('message')).toEqual('Likes must be a number');
         expect(nextState.get('errors').size).toBe(4);
       });
     });
@@ -69,15 +71,13 @@ describe('application logic', () => {
       const secondUser = Map(factoryUser('hspecter', 'Italian Suits Rock', 0, 0));
       const currentState = Map({
         filteredUsers: List([]),
-        filterTerm: '',
-        filterField: '',
+        filterTerm: term,
+        filterField: field,
         usersRepo: List([firstUser, secondUser]),
       });
 
-      const nextState = filterUsers(currentState, term, field);
+      const nextState = filterUsers(currentState);
 
-      expect(nextState.get('filterTerm')).toEqual(term);
-      expect(nextState.get('filterField')).toEqual(field);
       expect(nextState.get('filteredUsers').size).toBe(1);
       expect(nextState.get('filteredUsers').first().get('userName')).toEqual(term);
     });

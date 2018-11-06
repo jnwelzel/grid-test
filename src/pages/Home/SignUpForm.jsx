@@ -16,7 +16,7 @@ const SignUpForm = ({ currentUser, setUserProperty, handleSubmit }) => (
     </InputGroup>
     <InputGroup>
       <label htmlFor="postTitle">Post Title</label>
-      <input type="text" name="postTitle" id="postTitle" placeholder="Identity Crisis"
+      <input type="text" name="postTitle" id="postTitle" placeholder="Who Am I?"
         value={currentUser.get('postTitle')}
         onChange={e => setUserProperty('postTitle', e.target.value)}
       />

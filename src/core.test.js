@@ -14,13 +14,14 @@ describe('application logic', () => {
     it('adds a user to the state', () => {
       const firstUser = Map(factoryUser('jnwelzel', 'JS rocks', 1024, 133));
       const newUser = Map(factoryUser('mpoppins', 'Kids 101', 2048, 266));
-      const currentState = Map({ usersRepo: List([firstUser]), currentUser: newUser });
-
-      const nextState = addUser(currentState, newUser);
-
-      expect(nextState).toEqual(
-        Map({ usersRepo: List([firstUser, newUser]), currentUser: Map({}) }),
+      const currentState = Map(
+        { usersRepo: List([firstUser]), currentUser: newUser, isFormValid: true },
       );
+
+      const nextState = addUser(currentState);
+
+      expect(nextState.get('usersRepo').last().get('createdAt')).toBeDefined();
+      expect(nextState.get('currentUser')).toEqual(Map(factoryUser('', '', '', '')));
       expect(nextState.get('usersRepo').size).toBe(2);
       expect(nextState.get('usersRepo').last().userName).toEqual(newUser.userName);
     });

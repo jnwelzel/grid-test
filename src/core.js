@@ -1,10 +1,18 @@
 import { Map, List } from 'immutable';
 
 import factoryValidationError from './models/validationError';
+import factoryUser from './models/user';
 
-export const addUser = state => (
-  state.update('usersRepo', users => users.push(state.get('currentUser'))).set('currentUser', Map({}))
-);
+export const addUser = (state) => {
+  if (!state.get('isFormValid')) return state;
+
+  const updatedState = state.setIn(['currentUser', 'createdAt'], new Date());
+  return updatedState.update(
+    'usersRepo', users => users.push(updatedState.get('currentUser')),
+  )
+    .set('currentUser', Map(factoryUser('', '', '', '')))
+    .set('isFormValid', false);
+};
 
 export const validateUser = (state) => {
   let errors = List([]);

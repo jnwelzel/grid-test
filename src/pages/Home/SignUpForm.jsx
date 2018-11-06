@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 
 import InputGroup from '../../components/InputGroup';
 import styles from './SignUpForm.scss';
-import { setUserPropertyAction } from '../../modules/users';
+import { setUserPropertyAction, addUserAction } from '../../modules/users';
 
-const SignUpForm = ({ currentUser, setUserProperty }) => (
-  <form className={styles.form}>
+const SignUpForm = ({ currentUser, setUserProperty, handleSubmit }) => (
+  <form className={styles.form} onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
     <InputGroup>
       <label htmlFor="userName">User Name</label>
       <input type="text" name="userName" id="userName" placeholder="john.doe"
@@ -45,6 +45,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setUserProperty: setUserPropertyAction,
+  handleSubmit: addUserAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);

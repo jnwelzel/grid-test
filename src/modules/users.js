@@ -5,6 +5,7 @@ import {
   filterUsers,
   sortUsers,
   setUserProperty,
+  validateUser
 } from '../core';
 import userFactory from '../models/user';
 
@@ -12,13 +13,14 @@ const initialState = Map(
   {
     usersRepo: List([]),
     currentUser: Map(userFactory()),
+    isFormValid: false,
   },
 );
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'users.add':
-      return addUser(state);
+      return addUser(validateUser(state));
     case 'users.filter':
       return filterUsers(state);
     case 'users.sort':
@@ -32,6 +34,10 @@ const reducer = (state = initialState, action) => {
 
 export const setUserPropertyAction = (property, value, isNumber) => (
   { type: 'users.setUserProperty', property, value, isNumber }
+);
+
+export const addUserAction = () => (
+  { type: 'users.add' }
 );
 
 export default reducer;

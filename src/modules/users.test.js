@@ -7,15 +7,38 @@ const user1 = Map(factoryUser('jnwelzel', 'JS rocks', 1024, 133));
 const user2 = Map(factoryUser('mpoppins', 'Kids 101', 2048, 266));
 
 describe('users reducer', () => {
-  it('handles "users.add" action', () => {
-    const initialState = Map({ usersRepo: List([user1]), currentUser: Map(user2) });
-    const action = { type: 'users.add' };
+  describe('handles "users.add" action', () => {
+    describe('when form validation passes', () => {
+      it('adds the "currentUser" to the state', () => {
+        const initialState = Map({
+          usersRepo: List([user1]), currentUser: user2, isFormValid: false,
+        });
+        const action = { type: 'users.add' };
 
-    const nextState = reducer(initialState, action);
+        const nextState = reducer(initialState, action);
 
-    expect(nextState).toEqual(
-      Map({ usersRepo: List([user1, user2]), currentUser: Map({}) }),
-    );
+        expect(nextState.get('usersRepo').size).toBe(2);
+        expect(nextState.get('isFormValid')).toBeFalsy();
+        expect(nextState.get('usersRepo').last().get('createdAt')).toBeDefined();
+      });
+    });
+
+    describe('when form validation does not pass', () => {
+      it('adds the validation errors to the state and does not update "usersRepo"', () => {
+        const invalidUser = Map(factoryUser());
+        const initialState = Map({
+          usersRepo: List([user1]), currentUser: invalidUser, isFormValid: false,
+        });
+        const action = { type: 'users.add' };
+
+        const nextState = reducer(initialState, action);
+
+        expect(nextState.get('usersRepo').size).toBe(1);
+        expect(nextState.get('isFormValid')).toBeFalsy();
+        expect(nextState.get('currentUser')).toEqual(invalidUser);
+        expect(nextState.get('errors').size).toBe(4);
+      });
+    })
   });
 
   it('handles "users.filter" action', () => {

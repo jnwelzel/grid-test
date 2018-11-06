@@ -8,7 +8,7 @@ const Table = ({ headers, rows }) => (
       <tr>{headers.map(header => <th key={header.fieldName}>{header.title}</th>)}</tr>
     </thead>
     <tbody>
-      {rows.map(row => <Row values={row} />)}
+      {rows.map(row => <Row key={row} values={row} />)}
     </tbody>
   </table>
 );

@@ -11,15 +11,20 @@ describe('users reducer', () => {
     describe('when form validation passes', () => {
       it('adds the "currentUser" to the state', () => {
         const initialState = Map({
-          usersRepo: List([user1]), currentUser: user2, isFormValid: false,
+          usersRepo: List([user1]),
+          filteredUsers: List([]),
+          currentUser: user2,
+          isFormValid: false,
         });
         const action = { type: 'users.add' };
 
         const nextState = reducer(initialState, action);
 
         expect(nextState.get('usersRepo').size).toBe(2);
-        expect(nextState.get('isFormValid')).toBeFalsy();
         expect(nextState.get('usersRepo').last().get('createdAt')).toBeDefined();
+        expect(nextState.get('filteredUsers').size).toBe(2);
+        expect(nextState.get('isFormValid')).toBeFalsy();
+        expect(nextState.get('filterTerm')).toBeFalsy();
       });
     });
 
@@ -68,51 +73,63 @@ describe('users reducer', () => {
     expect(nextState.get('filteredUsers')).toEqual(List([user2, user1]));
   });
 
-  it('handles "users.setUserProperty" action for "userName" property', () => {
-    const initialState = Map({
-      currentUser: Map(factoryUser()),
+  describe('handles "users.setUserProperty" action', () => {
+    it('for "userName" property', () => {
+      const initialState = Map({
+        currentUser: Map(factoryUser()),
+      });
+      const uName = 'hpotter';
+      const action = { type: 'users.setUserProperty', property: 'userName', value: uName };
+
+      const nextState = reducer(initialState, action);
+
+      expect(nextState.get('currentUser').get('userName')).toEqual(uName);
     });
-    const uName = 'hpotter';
-    const action = { type: 'users.setUserProperty', property: 'userName', value: uName };
 
-    const nextState = reducer(initialState, action);
+    it('for "postTitle" property', () => {
+      const initialState = Map({
+        currentUser: Map(factoryUser()),
+      });
+      const postTitle = 'My First Blog Post';
+      const action = { type: 'users.setUserProperty', property: 'postTitle', value: postTitle };
 
-    expect(nextState.get('currentUser').get('userName')).toEqual(uName);
+      const nextState = reducer(initialState, action);
+
+      expect(nextState.get('currentUser').get('postTitle')).toEqual(postTitle);
+    });
+
+    it('for "views" property', () => {
+      const initialState = Map({
+        currentUser: Map(factoryUser()),
+      });
+      const views = '552';
+      const action = { type: 'users.setUserProperty', property: 'views', value: views, isNumber: true };
+
+      const nextState = reducer(initialState, action);
+
+      expect(nextState.get('currentUser').get('views')).toEqual(552);
+    });
+
+    it('for "likes" property', () => {
+      const initialState = Map({
+        currentUser: Map(factoryUser()),
+      });
+      const likes = '291';
+      const action = { type: 'users.setUserProperty', property: 'likes', value: likes, isNumber: true };
+
+      const nextState = reducer(initialState, action);
+
+      expect(nextState.get('currentUser').get('likes')).toEqual(291);
+    });
   });
 
-  it('handles "users.setUserProperty" action for "postTitle" property', () => {
-    const initialState = Map({
-      currentUser: Map(factoryUser()),
-    });
-    const postTitle = 'My First Blog Post';
-    const action = { type: 'users.setUserProperty', property: 'postTitle', value: postTitle };
+  it('handles "users.setFilterTerm" action', () => {
+    const initialState = Map({ filterTerm: '' });
+    const filterTerm = 'john';
+    const action = { type: 'users.setFilterTerm', filterTerm };
 
     const nextState = reducer(initialState, action);
 
-    expect(nextState.get('currentUser').get('postTitle')).toEqual(postTitle);
-  });
-
-  it('handles "users.setUserProperty" action for "views" property', () => {
-    const initialState = Map({
-      currentUser: Map(factoryUser()),
-    });
-    const views = '552';
-    const action = { type: 'users.setUserProperty', property: 'views', value: views, isNumber: true };
-
-    const nextState = reducer(initialState, action);
-
-    expect(nextState.get('currentUser').get('views')).toEqual(552);
-  });
-
-  it('handles "users.setUserProperty" action for "likes" property', () => {
-    const initialState = Map({
-      currentUser: Map(factoryUser()),
-    });
-    const likes = '291';
-    const action = { type: 'users.setUserProperty', property: 'likes', value: likes, isNumber: true };
-
-    const nextState = reducer(initialState, action);
-
-    expect(nextState.get('currentUser').get('likes')).toEqual(291);
+    expect(nextState).toEqual(Map({ filterTerm }));
   });
 });

@@ -29,7 +29,7 @@ const UsersGrid = ({ users }) => (
 );
 
 const mapStateToProps = state => ({
-  users: state.users.get('usersRepo'),
+  users: state.users.get('filteredUsers'),
 });
 
 export default connect(mapStateToProps)(UsersGrid);

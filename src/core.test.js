@@ -7,6 +7,8 @@ import {
   filterUsers,
   sortUsers,
   setUserProperty,
+  setFilterTerm,
+  resetFilteredUsers,
 } from './core';
 
 describe('application logic', () => {
@@ -48,8 +50,8 @@ describe('application logic', () => {
         const nextState = validateUser(currentState);
 
         expect(nextState.get('isFormValid')).toBeFalsy();
-        expect(nextState.get('errors').get(2).get('message')).toEqual('Views must be a number');
-        expect(nextState.get('errors').last().get('message')).toEqual('Likes must be a number');
+        expect(nextState.getIn(['errors', 'views'])).toEqual('Views must be a number');
+        expect(nextState.getIn(['errors', 'likes'])).toEqual('Likes must be a number');
         expect(nextState.get('errors').size).toBe(4);
       });
     });
@@ -82,6 +84,24 @@ describe('application logic', () => {
 
       expect(nextState.get('filteredUsers').size).toBe(1);
       expect(nextState.get('filteredUsers').first().get('userName')).toEqual(term);
+    });
+
+    it('adds all users from "usersRepo" to the state when no filter term is provided', () => {
+      const term = '';
+      const field = 'userName';
+      const firstUser = Map(factoryUser('jnwelzel', 'My First Blog Post', 0, 0));
+      const secondUser = Map(factoryUser('hspecter', 'Italian Suits Rock', 0, 0));
+      const currentState = Map({
+        filteredUsers: List([firstUser]),
+        filterTerm: term,
+        filterField: field,
+        usersRepo: List([firstUser, secondUser]),
+      });
+
+      const nextState = filterUsers(currentState);
+
+      expect(nextState.get('filteredUsers').size).toBe(2);
+      expect(nextState.get('filteredUsers').first().get('userName')).toEqual(firstUser.get('userName'));
     });
   });
 
@@ -158,6 +178,58 @@ describe('application logic', () => {
       const nextState = setUserProperty(initialState, 'likes', likes, true);
 
       expect(nextState.get('currentUser').get('likes')).toEqual(0);
+    });
+  });
+
+  describe('setFilterTerm', () => {
+    it('adds "filterTerm" to the state', () => {
+      const initialState = Map({ filterTerm: '' });
+      const filterTerm = 'ohai';
+
+      const nextState = setFilterTerm(initialState, filterTerm);
+
+      expect(nextState.get('filterTerm')).toEqual(filterTerm);
+    });
+  });
+
+  describe('resetFilteredUsers', () => {
+    describe('when form is valid', () => {
+      it('sets "filteredUsers" with the value from "usersRepo"', () => {
+        const usersRepo = List([Map(factoryUser(), factoryUser())]);
+        const filteredUsers = List([]);
+        const initialState = Map({
+          usersRepo,
+          filteredUsers,
+          isFormValid: true,
+          filterTerm: 'john.doe',
+        });
+
+        const nextState = resetFilteredUsers(initialState);
+
+        expect(nextState).toEqual(Map({
+          usersRepo,
+          filteredUsers: usersRepo,
+          isFormValid: false,
+          filterTerm: '',
+        }));
+      });
+    });
+
+    describe('when form is invalid', () => {
+      it('just returns the current state', () => {
+        const usersRepo = List([Map(factoryUser(), factoryUser())]);
+        const filteredUsers = List([]);
+        const initialState = Map({
+          usersRepo,
+          filteredUsers,
+          isFormValid: false,
+          filterTerm: 'john.doe',
+        });
+
+        const nextState = resetFilteredUsers(initialState);
+
+        expect(nextState).toEqual(initialState);
+      });
     });
   });
 });

@@ -1,6 +1,5 @@
-import { Map, List } from 'immutable';
+import { Map } from 'immutable';
 
-import factoryValidationError from './models/validationError';
 import factoryUser from './models/user';
 
 export const addUser = (state) => {
@@ -10,12 +9,11 @@ export const addUser = (state) => {
   return updatedState.update(
     'usersRepo', users => users.push(updatedState.get('currentUser')),
   )
-    .set('currentUser', Map(factoryUser('', '', '', '')))
-    .set('isFormValid', false);
+    .set('currentUser', Map(factoryUser('', '', '', '')));
 };
 
 export const validateUser = (state) => {
-  let errors = List([]);
+  let errors = Map({});
   const {
     userName,
     postTitle,
@@ -24,26 +22,28 @@ export const validateUser = (state) => {
   } = state.get('currentUser').toJS();
 
   if (!userName) {
-    errors = errors.push(Map(factoryValidationError('userName', 'User Name is required')));
+    errors = errors.set('userName', 'User Name is required');
   }
   if (!postTitle) {
-    errors = errors.push(Map(factoryValidationError('postTitle', 'Post Title is required')));
+    errors = errors.set('postTitle', 'Post Title is required');
   }
   if (!views) {
-    errors = errors.push(Map(factoryValidationError('views', 'Views is required')));
+    errors = errors.set('views', 'Views is required');
   } else if (typeof views !== 'number') {
-    errors = errors.push(Map(factoryValidationError('views', 'Views must be a number')));
+    errors = errors.set('views', 'Views must be a number');
   }
   if (!likes) {
-    errors = errors.push(Map(factoryValidationError('likes', 'Likes is required')));
+    errors = errors.set('likes', 'Likes is required');
   } else if (typeof likes !== 'number') {
-    errors = errors.push(Map(factoryValidationError('likes', 'Likes must be a number')));
+    errors = errors.set('likes', 'Likes must be a number');
   }
 
   return state.set('isFormValid', errors.size === 0).set('errors', errors);
 };
 
 export const filterUsers = (state) => {
+  if (!state.get('filterTerm')) return state.set('filteredUsers', state.get('usersRepo'));
+
   const field = state.get('filterField');
   const term = state.get('filterTerm');
   const filteredList = state.get('usersRepo').filter(user => user.get(field) === term);
@@ -67,3 +67,15 @@ export const sortUsers = (state) => {
 export const setUserProperty = (state, property, value, isNumber) => (
   state.setIn(['currentUser', property], isNumber ? parseInt(value, 10) || 0 : value)
 );
+
+export const setFilterTerm = (state, filterTerm) => (
+  state.set('filterTerm', filterTerm)
+);
+
+export const resetFilteredUsers = (state) => {
+  if (!state.get('isFormValid')) return state;
+
+  return state.set('filteredUsers', state.get('usersRepo'))
+    .set('isFormValid', false)
+    .set('filterTerm', '');
+};

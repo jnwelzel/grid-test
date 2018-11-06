@@ -55,3 +55,7 @@ export const sortUsers = (state) => {
   const sortedUsers = state.get('filteredUsers').sort((a, b) => doSort(a, b, field, order));
   return state.set('filteredUsers', sortedUsers);
 };
+
+export const setUserProperty = (state, property, value, isNumber) => (
+  state.setIn(['currentUser', property], isNumber ? parseInt(value, 10) || 0 : value)
+);

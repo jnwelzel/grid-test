@@ -6,6 +6,7 @@ import {
   validateUser,
   filterUsers,
   sortUsers,
+  setUserProperty,
 } from './core';
 
 describe('application logic', () => {
@@ -100,6 +101,62 @@ describe('application logic', () => {
 
       expect(nextState.get('filteredUsers').first().get('postTitle')).toEqual(secondUser.get('postTitle'));
       expect(nextState.get('filteredUsers').first().get('userName')).toEqual(secondUser.get('userName'));
+    });
+  });
+
+  describe('setUserProperty', () => {
+    it('adds the "userName" text to the state', () => {
+      const userName = 'jnwelzel';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'userName', userName);
+
+      expect(nextState.get('currentUser').get('userName')).toEqual(userName);
+    });
+
+    it('adds the "postTitle" text to the state', () => {
+      const postTitle = 'A Cool Blog Post';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'postTitle', postTitle);
+
+      expect(nextState.get('currentUser').get('postTitle')).toEqual(postTitle);
+    });
+
+    it('adds the "views" value to the state', () => {
+      const views = '834';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'views', views, true);
+
+      expect(nextState.get('currentUser').get('views')).toEqual(834);
+    });
+
+    it('adds zero to the state for the "views" value when the input is not a number', () => {
+      const views = 'az834';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'views', views, true);
+
+      expect(nextState.get('currentUser').get('views')).toEqual(0);
+    });
+
+    it('adds the "likes" value to the state', () => {
+      const likes = '834';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'likes', likes, true);
+
+      expect(nextState.get('currentUser').get('likes')).toEqual(834);
+    });
+
+    it('adds zero to the state for the "likes" value when the input is not a number', () => {
+      const likes = 'az834';
+      const initialState = Map({ currentUser: Map(factoryUser()) });
+
+      const nextState = setUserProperty(initialState, 'likes', likes, true);
+
+      expect(nextState.get('currentUser').get('likes')).toEqual(0);
     });
   });
 });

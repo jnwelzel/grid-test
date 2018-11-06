@@ -1,6 +1,6 @@
 const user = {
-  userName: '',
-  postTitle: '',
+  userName: null,
+  postTitle: null,
   views: null,
   likes: null,
   createdAt: null,
@@ -12,8 +12,8 @@ const user = {
   },
 };
 
-const factoryUser = (userName, postTitle, views, likes) => (
-  Object.assign(user, { userName, postTitle, views, likes, createdAt: new Date() })
+const factoryUser = (userName, postTitle, views, likes, createdAt) => (
+  Object.assign(user, { userName, postTitle, views, likes, createdAt })
 );
 
 export default factoryUser;

@@ -7,11 +7,11 @@ import Section from '../../components/Section';
 import Table from '../../components/Table';
 
 const HEADERS = [
-  { fieldName: 'userName', title: 'User name' },
-  { fieldName: 'postTitle', title: 'Post title' },
-  { fieldName: 'views', title: 'Views' },
-  { fieldName: 'likes', title: 'Likes' },
-  { fieldName: 'createdAt', title: 'Created at' },
+  { fieldName: 'userName', title: 'User name', toCellValue: value => value },
+  { fieldName: 'postTitle', title: 'Post title', toCellValue: value => value },
+  { fieldName: 'views', title: 'Views', toCellValue: value => value },
+  { fieldName: 'likes', title: 'Likes', toCellValue: value => value },
+  { fieldName: 'createdAt', title: 'Created at', toCellValue: value => `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}` },
 ];
 
 const UsersGrid = ({ users }) => (
@@ -21,7 +21,7 @@ const UsersGrid = ({ users }) => (
         <UsersFilter />
         <Table
           headers={HEADERS}
-          rows={[users.map(user => user.toJS().toTableRow())]}
+          data={users}
         />
       </Section>
     </div>

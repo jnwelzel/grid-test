@@ -6,6 +6,7 @@
   display: table;
   font-family: $fancy-font;
   font-size: 22px;
+  margin: 20px 0;
   white-space: nowrap;
   &:before, &:after {
     border-top: 1px solid $silver-chalice;

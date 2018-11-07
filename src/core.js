@@ -48,6 +48,8 @@ export const filterUsers = (state) => {
   const term = state.get('filterTerm');
   const filteredList = state.get('usersRepo').filter(user => user.get(field) === term);
 
+  if (filteredList.size === 0) return state;
+
   return state.set('filteredUsers', filteredList);
 };
 

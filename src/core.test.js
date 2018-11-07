@@ -15,9 +15,9 @@ describe('application logic', () => {
   describe('addUser', () => {
     it('adds a user to the state', () => {
       const firstUser = Map(factoryUser('jnwelzel', 'JS rocks', 1024, 133));
-      const newUser = Map(factoryUser('mpoppins', 'Kids 101', 2048, 266));
+      const secondUser = Map(factoryUser('mpoppins', 'Kids 101', 2048, 266));
       const currentState = Map(
-        { usersRepo: List([firstUser]), currentUser: newUser, isFormValid: true },
+        { usersRepo: List([firstUser]), currentUser: secondUser, isFormValid: true },
       );
 
       const nextState = addUser(currentState);
@@ -25,7 +25,7 @@ describe('application logic', () => {
       expect(nextState.get('usersRepo').last().get('createdAt')).toBeDefined();
       expect(nextState.get('currentUser')).toEqual(Map(factoryUser('', '', '', '')));
       expect(nextState.get('usersRepo').size).toBe(2);
-      expect(nextState.get('usersRepo').last().userName).toEqual(newUser.userName);
+      expect(nextState.get('usersRepo').last().userName).toEqual(secondUser.userName);
     });
   });
 
@@ -102,6 +102,23 @@ describe('application logic', () => {
 
       expect(nextState.get('filteredUsers').size).toBe(2);
       expect(nextState.get('filteredUsers').first().get('userName')).toEqual(firstUser.get('userName'));
+    });
+
+    it('returns the current state when the filter returns no results', () => {
+      const term = 'foobar';
+      const field = 'userName';
+      const firstUser = Map(factoryUser('jnwelzel', 'My First Blog Post', 0, 0));
+      const secondUser = Map(factoryUser('hspecter', 'Italian Suits Rock', 0, 0));
+      const currentState = Map({
+        filteredUsers: List([firstUser]),
+        filterTerm: term,
+        filterField: field,
+        usersRepo: List([firstUser, secondUser]),
+      });
+
+      const nextState = filterUsers(currentState);
+
+      expect(nextState).toEqual(currentState);
     });
   });
 

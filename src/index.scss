@@ -11,6 +11,45 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 900;
   line-height: 1.5;
   letter-spacing: 0.075em;
-  text-transform: uppercase;
   margin: 0 0 1rem 0;
+  text-transform: uppercase;
+}
+
+table {
+  background-color: $white;
+  border-collapse: collapse;
+  margin: 0;
+  max-width: 50rem;
+  padding: 0;
+}
+
+th {
+  text-align: left;
+}
+
+th,
+td {
+  border: 1px solid $beach-storm;
+  padding: 1rem;
+}
+
+button {
+  background-color: $wild-blue-yonder;
+  border: 0;
+  color: $white;
+  cursor: pointer;
+  font-weight: 600;
+  height: 30px;
+  letter-spacing: 0.05em;
+  padding: 0 15px;
+  text-transform: uppercase;
+}
+
+input {
+  height: 30px;
+  padding: 0 5px;
+}
+
+p {
+  line-height: 24px;
 }

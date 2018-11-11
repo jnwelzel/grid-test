@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import InputGroup from '../../../components/InputGroup';
 import styles from './UsersFilter.scss';
@@ -18,6 +19,12 @@ const UsersFilter = ({ filterTerm, setFilterTerm, handleSubmit }) => (
     </InputGroup>
   </form>
 );
+
+UsersFilter.propTypes = {
+  filterTerm: PropTypes.string.isRequired,
+  setFilterTerm: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+}
 
 const mapStateToProps = state => ({
   filterTerm: state.users.get('filterTerm'),

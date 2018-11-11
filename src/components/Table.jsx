@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { List } from 'immutable';
 
 import styles from './Table.scss';
 
@@ -27,13 +29,13 @@ const withHighestValueRow = highestProperty => BaseComponent => (baseProps) => {
 const Table = ({ headers, data, newestRowIndex }) => (
   <table>
     <thead>
-      <tr>{headers.map(header => <th key={header.fieldName}>{header.title}</th>)}</tr>
+      <tr>{headers.map(header => <th key={header.get('fieldName')}>{header.get('title')}</th>)}</tr>
     </thead>
     <tbody>
-      {data.map((row, index) => (
-        <tr key={`row-${row}-${index}`} className={index === newestRowIndex ? styles.highlight : ''}>
-          {headers.map((header, jindex) => (
-            <td key={`cell-${index}-${jindex}`}>{header.toCellValue(row.get(header.fieldName))}</td>
+      {data.map((row, i) => (
+        <tr key={`row-${row}-${i}`} className={i === newestRowIndex ? styles.highlight : ''}>
+          {headers.map((header, j) => (
+            <td key={`col-${i}-${j}`}>{header.get('valueFormatter')(row.get(header.get('fieldName')))}</td>
           ))}
         </tr>
       ))}
@@ -42,8 +44,13 @@ const Table = ({ headers, data, newestRowIndex }) => (
 );
 
 Table.defaultProps = {
-  headers: [],
-  rows: [],
+  newestRowIndex: 0,
+};
+
+Table.propTypes = {
+  headers: PropTypes.instanceOf(List).isRequired,
+  data: PropTypes.instanceOf(List).isRequired,
+  newestRowIndex: PropTypes.number,
 };
 
 export default withHighestValueRow('createdAt')(Table);
